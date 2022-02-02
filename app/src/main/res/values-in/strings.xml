@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Majalah Film</string>
+
+    <string name="change_language_settings">Ganti BAHASA</string>
+    <string name="tab_movies">Film</string>
+    <string name="tab_tv_show">Acara TV</string>
+    <string name="title">Judul :</string>
+    <string name="rating">Penilaian :</string>
+    <string name="release_date">Tanggal Rilis</string>
+    <string name="overview">Ikhtisar</string>
+    <string name="tab_favorites">Favorit</string>
+    <string name="add_to_favorite">favorit</string>
+    <string name="search">Cari</string>
+    <string name="search_hint">Cari film atau acara TV</string>
+    <string-array name="search_filter_array">
+        <item>Film</item>
+        <item>Acara TV</item>
+    </string-array>
+
+    <string name="new_release_notification">%1s sudah rilis. Tekan untuk baca selengkapnya!</string>
+    <string name="notification_content">Hi selamat datang kembali :), kami merindukan anda</string>
+
+    <string name="language">Bahasa</string>
+    <string name="theme">Tema</string>
+    <string name="dark_mode">Mode Gelap</string>
+    <string name="daily_reminder">Pengingat harian</string>
+    <string name="reminder">Pengingat</string>
+    <string name="release_reminder">Pengingat rilis</string>
+    <string name="change_language">Ubah Bahasa</string>
+    <string name="title_activity_settings">Pengaturan</string>
+</resources>

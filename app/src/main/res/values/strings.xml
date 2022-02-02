@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Movies Magazine</string>
+
+    <string name="change_language_settings">Change Language</string>
+    <string name="tab_movies">Movies</string>
+    <string name="tab_tv_show">Tv Show</string>
+    <string name="title">Title :</string>
+    <string name="rating">Rating :</string>
+    <string name="release_date">Release Date</string>
+    <string name="overview">Overview</string>
+    <string name="tab_favorites">Favorites</string>
+    <string name="add_to_favorite">favorite</string>
+    <string name="search">Searchw</string>
+    <string name="search_hint">Search movie or tv show</string>
+    <string name="new_release_notification">%1s is released. Click to read more!</string>
+
+    <string name="notification_content">Hi welcome back :), we miss you already</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+
+    <!-- Messages Preferences -->
+
+    <!-- Sync Preferences -->
+    <string-array name="search_filter_array">
+        <item>Movie</item>
+        <item>Tv Show</item>
+    </string-array>
+
+    <string name="reminder">Reminder</string>
+    <string name="theme">Theme</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="daily_reminder">Daily reminder</string>
+    <string name="release_reminder">Release reminder</string>
+    <string name="language">Language</string>
+    <string name="change_language">Change Language</string>
+
+
+</resources>
