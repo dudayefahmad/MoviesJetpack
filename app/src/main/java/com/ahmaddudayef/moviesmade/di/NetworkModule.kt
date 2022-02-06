@@ -1,6 +1,5 @@
 package com.ahmaddudayef.moviesmade.di
 
-import android.util.Log
 import com.ahmaddudayef.moviesmade.BuildConfig
 import com.ahmaddudayef.moviesmade.data.ApiService
 import com.google.gson.Gson
@@ -15,9 +14,10 @@ import java.util.concurrent.TimeUnit
 
 val networkModule = module {
     single(named("logging")) {
-        HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
-            Log.d("ApiLog", message)
-        }).setLevel(HttpLoggingInterceptor.Level.BODY) as Interceptor
+        HttpLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT).apply {
+            level =
+                if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+        } as Interceptor
     }
 
     single {

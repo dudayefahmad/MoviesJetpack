@@ -6,7 +6,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.observe
 import com.ahmaddudayef.moviesmade.R
 import com.ahmaddudayef.moviesmade.data.Image
 import com.ahmaddudayef.moviesmade.data.State
@@ -16,9 +15,6 @@ import com.ahmaddudayef.moviesmade.util.loadImageUrl
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DetailMovieActivity : AppCompatActivity() {
-    companion object {
-        const val DETAIL_FILM = "detail_film"
-    }
 
     private lateinit var binding: ActivityDetailBinding
     lateinit var movie: Movie
@@ -136,5 +132,9 @@ class DetailMovieActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        const val DETAIL_FILM = "detail_film"
     }
 }

@@ -87,8 +87,7 @@ class TvShowFragment : Fragment() {
     }
 
     private fun setMovieData(data: List<TvShow>) {
-        listTvShow.addAll(data)
-        adapter.listTvShow = listTvShow
+        adapter.setListTvShow(data)
     }
 
     private fun showError(throwable: Throwable) {
@@ -108,6 +107,7 @@ class TvShowFragment : Fragment() {
 
     private fun setUpRecyclerView() {
         binding.rvTvShow.layoutManager = LinearLayoutManager(activity)
+        binding.rvTvShow.setHasFixedSize(true)
         binding.rvTvShow.adapter = adapter
     }
 

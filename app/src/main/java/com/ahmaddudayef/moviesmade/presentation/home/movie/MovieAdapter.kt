@@ -3,6 +3,7 @@ package com.ahmaddudayef.moviesmade.presentation.home.movie
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ahmaddudayef.moviesmade.data.Image
 import com.ahmaddudayef.moviesmade.data.remote.response.movies.Movie
@@ -12,11 +13,16 @@ import com.ahmaddudayef.moviesmade.util.loadImageUrl
 
 class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
-    var listMovie: List<Movie> = arrayListOf()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    private val listMovie = ArrayList<Movie>()
+
+    fun setListMovie(listMovie: List<Movie>) {
+        val diffCallback = MovieDiffCallback(this.listMovie, listMovie)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        this.listMovie.clear()
+        this.listMovie.addAll(listMovie)
+        diffResult.dispatchUpdatesTo(this)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val itemMovieBinding =

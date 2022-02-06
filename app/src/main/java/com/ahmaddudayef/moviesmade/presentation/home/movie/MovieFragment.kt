@@ -20,7 +20,7 @@ import java.util.*
 class MovieFragment : Fragment() {
 
     private var _binding: FragmentMovieBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     private val viewModel by viewModel<MovieViewModel>()
     private val adapter by lazy { MovieAdapter() }
@@ -32,7 +32,7 @@ class MovieFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentMovieBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,7 +43,7 @@ class MovieFragment : Fragment() {
     }
 
     private fun setupSwipeRefreshLayout() {
-        binding.srlMovie.setOnRefreshListener {
+        binding?.srlMovie?.setOnRefreshListener {
             getMovies()
         }
     }
@@ -87,28 +87,28 @@ class MovieFragment : Fragment() {
     }
 
     private fun setMovieData(data: List<Movie>) {
-        listMovie.addAll(data)
-        adapter.listMovie = listMovie
+        adapter.setListMovie(data)
     }
 
     private fun showError(throwable: Throwable) {
-        throwable.message?.let { activity?.showSnackbar(binding.clRoot, it) }
+        throwable.message?.let { binding?.let { it1 -> activity?.showSnackbar(it1.clRoot, it) } }
     }
 
     private fun hideLoading() {
-        binding.srlMovie.isRefreshing = false
-        binding.progressView.gone()
-        binding.rvMovie.visible()
+        binding?.srlMovie?.isRefreshing = false
+        binding?.progressView?.gone()
+        binding?.rvMovie?.visible()
     }
 
     private fun showLoading() {
-        binding.progressView.visible()
-        binding.rvMovie.gone()
+        binding?.progressView?.visible()
+        binding?.rvMovie?.gone()
     }
 
     private fun setUpRecyclerView() {
-        binding.rvMovie.layoutManager = LinearLayoutManager(activity)
-        binding.rvMovie.adapter = adapter
+        binding?.rvMovie?.layoutManager = LinearLayoutManager(activity)
+        binding?.rvMovie?.setHasFixedSize(true)
+        binding?.rvMovie?.adapter = adapter
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -23,7 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MovieFavoriteFragment : Fragment() {
 
     private var _binding: FragmentMovieFavoriteBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     private val viewModel by viewModel<MovieFavoriteViewModel>()
     private val adapter by lazy { MovieAdapter() }
@@ -35,7 +35,7 @@ class MovieFavoriteFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentMovieFavoriteBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,7 +48,7 @@ class MovieFavoriteFragment : Fragment() {
     }
 
     private fun setupSwipeRefreshLayout() {
-        binding.srlRootMovie.setOnRefreshListener {
+        binding?.srlRootMovie?.setOnRefreshListener {
             viewModel.getFavoriteMovie()
         }
     }
@@ -61,8 +61,9 @@ class MovieFavoriteFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        binding.rvMovie.layoutManager = LinearLayoutManager(activity)
-        binding.rvMovie.adapter = adapter
+        binding?.rvMovie?.layoutManager = LinearLayoutManager(activity)
+        binding?.rvMovie?.setHasFixedSize(true)
+        binding?.rvMovie?.adapter = adapter
     }
 
     private fun startObservingMovieData() {
@@ -86,24 +87,22 @@ class MovieFavoriteFragment : Fragment() {
     }
 
     private fun setMovieData(data: List<Movie>) {
-        listMovie.clear()
-        listMovie.addAll(data)
-        adapter.listMovie = listMovie
+        adapter.setListMovie(data)
     }
 
     private fun showError(throwable: Throwable) {
-        throwable.message?.let { activity?.showSnackbar(binding.clRoot, it) }
+        throwable.message?.let { binding?.let { it1 -> activity?.showSnackbar(it1.clRoot, it) } }
     }
 
     private fun hideLoading() {
-        binding.srlRootMovie.isRefreshing = false
-        binding.progressView.gone()
-        binding.rvMovie.visible()
+        binding?.srlRootMovie?.isRefreshing = false
+        binding?.progressView?.gone()
+        binding?.rvMovie?.visible()
     }
 
     private fun showLoading() {
-        binding.progressView.visible()
-        binding.rvMovie.gone()
+        binding?.progressView?.visible()
+        binding?.rvMovie?.gone()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -62,6 +62,7 @@ class TvShowFavoriteFragment : Fragment() {
 
     private fun setUpRecyclerView() {
         binding.rvTvShowFavorite.layoutManager = LinearLayoutManager(activity)
+        binding.rvTvShowFavorite.setHasFixedSize(true)
         binding.rvTvShowFavorite.adapter = adapter
     }
 
@@ -86,9 +87,7 @@ class TvShowFavoriteFragment : Fragment() {
     }
 
     private fun setTvShowData(data: List<TvShow>) {
-        listTvShow.clear()
-        listTvShow.addAll(data)
-        adapter.listTvShow = listTvShow
+        adapter.setListTvShow(data)
     }
 
     private fun showError(throwable: Throwable) {

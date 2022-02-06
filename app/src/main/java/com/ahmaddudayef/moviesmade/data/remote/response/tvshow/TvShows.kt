@@ -2,7 +2,7 @@ package com.ahmaddudayef.moviesmade.data.remote.response.tvshow
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class TvShows(

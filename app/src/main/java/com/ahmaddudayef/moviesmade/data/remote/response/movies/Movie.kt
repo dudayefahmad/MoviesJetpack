@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "movie")
 @Parcelize
@@ -49,6 +49,4 @@ data class Movie(
 
     @SerializedName("vote_count")
     val voteCount: Int
-) : Parcelable {
-    constructor() : this(0, "", "", "", false, "", "", "", "", 0.0, 0.0, false, 0)
-}
+) : Parcelable

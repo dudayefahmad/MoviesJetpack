@@ -151,6 +151,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun setUpRecyclerView() {
         binding.rvSearch.layoutManager = LinearLayoutManager(this)
+        binding.rvSearch.setHasFixedSize(true)
         if (binding.spinnerSearch.selectedItemPosition == 0) {
             binding.rvSearch.adapter = movieAdapter
         } else if (binding.spinnerSearch.selectedItemPosition == 1) {
@@ -160,16 +161,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setTvShowData(data: List<TvShow>) {
-        listTvShow.clear()
-        listTvShow.addAll(data)
-        tvShowAdapter.listTvShow = listTvShow
+        tvShowAdapter.setListTvShow(data)
     }
 
 
     private fun setMovieData(data: List<Movie>) {
-        listMovie.clear()
-        listMovie.addAll(data)
-        movieAdapter.listMovie = listMovie
+        movieAdapter.setListMovie(data)
     }
 
     private fun searchMovie() {
