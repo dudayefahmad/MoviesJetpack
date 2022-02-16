@@ -1,6 +1,5 @@
 package com.ahmaddudayef.moviesmade.util
 
-import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import com.ahmaddudayef.moviesmade.R
@@ -25,8 +24,8 @@ fun View.gone() {
     if (visibility != View.GONE) visibility = View.GONE
 }
 
-fun Context.showSnackbar(view: View, message: String): Snackbar {
-    return Snackbar.make(view, message, Snackbar.LENGTH_SHORT).apply {
-        show()
-    }
+fun View.showSnackbar(message: String, action: (Snackbar.() -> Unit)? = null) {
+    val snackbar = Snackbar.make(this, message, Snackbar.LENGTH_SHORT)
+    action?.let { snackbar.it() }
+    snackbar.show()
 }

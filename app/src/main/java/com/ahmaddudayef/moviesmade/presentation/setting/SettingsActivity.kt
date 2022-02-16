@@ -1,4 +1,3 @@
-
 package com.ahmaddudayef.moviesmade.presentation.setting
 
 import android.content.Context
@@ -64,15 +63,16 @@ class SettingsActivity : AppCompatActivity() {
             val languagePreference = findPreference<Preference>("preference_language")
 
             lifecycleScope.launch {
-                viewModel.getThemeSettings().observe(viewLifecycleOwner) { isDarkModeActive: Boolean ->
-                    if (isDarkModeActive) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                        darkModeSwitch?.isChecked = true
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                        darkModeSwitch?.isChecked = false
+                viewModel.getThemeSettings()
+                    .observe(viewLifecycleOwner) { isDarkModeActive: Boolean ->
+                        if (isDarkModeActive) {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                            darkModeSwitch?.isChecked = true
+                        } else {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                            darkModeSwitch?.isChecked = false
+                        }
                     }
-                }
             }
 
             darkModeSwitch?.onPreferenceClickListener = Preference.OnPreferenceClickListener {

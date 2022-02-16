@@ -1,39 +1,47 @@
 package com.ahmaddudayef.moviesmade.presentation.search
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ahmaddudayef.moviesmade.data.State
-import com.ahmaddudayef.moviesmade.data.remote.response.movies.Movie
-import com.ahmaddudayef.moviesmade.data.remote.response.tvshow.TvShow
-import com.ahmaddudayef.moviesmade.data.source.SearchDataSource
+import com.ahmaddudayef.moviesmade.data.remote.response.Movie
+import com.ahmaddudayef.moviesmade.data.remote.response.TvShow
+import com.ahmaddudayef.moviesmade.data.repository.MovieRepository
+import com.ahmaddudayef.moviesmade.data.repository.TvShowRepository
+import com.ahmaddudayef.moviesmade.vo.Resource
 import kotlinx.coroutines.launch
 
-class SearchViewModel(private val searchDataSource: SearchDataSource) : ViewModel() {
+class SearchViewModel(
+    private val movieRepository: MovieRepository,
+    private val tvShowRepository: TvShowRepository
+) : ViewModel() {
 
-    val searchMovieState = MutableLiveData<State<List<Movie>>>()
-    val searchTvShowState = MutableLiveData<State<List<TvShow>>>()
+    private val _searchMovieState = MutableLiveData<Resource<List<Movie>>>()
+    val searchMovieState: LiveData<Resource<List<Movie>>> = _searchMovieState
+
+    private val _searchTvShowState = MutableLiveData<Resource<List<TvShow>>>()
+    val searchTvShowState: LiveData<Resource<List<TvShow>>> = _searchTvShowState
 
     fun searchMovie(query: String) {
         viewModelScope.launch {
-            searchMovieState.postValue(State.Loading())
+            _searchMovieState.postValue(Resource.loading(null))
             try {
-                val movies = searchDataSource.searchMovies(query)
-                searchMovieState.postValue(State.Success(movies))
+                val searchMovies = movieRepository.searchMovies(query)
+                _searchMovieState.postValue(Resource.success(searchMovies))
             } catch (e: Exception) {
-                searchMovieState.postValue(State.Error(e))
+                _searchMovieState.postValue(Resource.error(e.message, null))
             }
         }
     }
 
     fun searchTvShow(query: String) {
         viewModelScope.launch {
-            searchTvShowState.postValue(State.Loading())
+            _searchTvShowState.postValue(Resource.loading(null))
             try {
-                val tvShow = searchDataSource.searchTvShow(query)
-                searchTvShowState.postValue(State.Success(tvShow))
+                val tvShow = tvShowRepository.searchTvShow(query)
+                _searchTvShowState.postValue(Resource.success(tvShow))
             } catch (e: Exception) {
-                searchTvShowState.postValue(State.Error(e))
+                _searchTvShowState.postValue(Resource.error(e.message, null))
             }
         }
     }

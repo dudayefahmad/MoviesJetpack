@@ -1,29 +1,29 @@
 package com.ahmaddudayef.moviesmade.presentation.home.tvshow
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ahmaddudayef.moviesmade.data.Image
-import com.ahmaddudayef.moviesmade.data.remote.response.movies.Movie
-import com.ahmaddudayef.moviesmade.data.remote.response.tvshow.TvShow
+import com.ahmaddudayef.moviesmade.data.local.entity.TvShowEntity
 import com.ahmaddudayef.moviesmade.databinding.ItemMovieBinding
-import com.ahmaddudayef.moviesmade.presentation.detailtvshow.DetailTvShowActivity
-import com.ahmaddudayef.moviesmade.presentation.home.movie.MovieDiffCallback
 import com.ahmaddudayef.moviesmade.util.loadImageUrl
 
-class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
+class TvShowAdapter(private val callback: TvShowCallback) :
+    PagedListAdapter<TvShowEntity, TvShowAdapter.TvShowViewHolder>(DIFF_CALLBACK) {
 
-    private val listTvShow = ArrayList<TvShow>()
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TvShowEntity>() {
+            override fun areItemsTheSame(oldItem: TvShowEntity, newItem: TvShowEntity): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-    fun setListTvShow(listTvShow: List<TvShow>) {
-        val diffCallback = TvShowDiffCallback(this.listTvShow, listTvShow)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
+            override fun areContentsTheSame(oldItem: TvShowEntity, newItem: TvShowEntity): Boolean {
+                return oldItem == newItem
+            }
 
-        this.listTvShow.clear()
-        this.listTvShow.addAll(listTvShow)
-        diffResult.dispatchUpdatesTo(this)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
@@ -32,26 +32,27 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
         return TvShowViewHolder(itemMovieBinding)
     }
 
-    override fun getItemCount(): Int = listTvShow.size
-
     override fun onBindViewHolder(holder: TvShowViewHolder, position: Int) {
-        holder.bind(listTvShow[position])
+        val tvShow = getItem(position)
+        if (tvShow != null) {
+            holder.bind(tvShow)
+        }
         holder.itemView.setOnClickListener {
-            val data = listTvShow[position]
-            val context = it.context
-            val intent = Intent(context, DetailTvShowActivity::class.java)
-            intent.putExtra(DetailTvShowActivity.DETAIL_TVSHOW, data)
-            context.startActivity(intent)
+            tvShow?.let { tvShow ->
+                callback.onItemClicked(tvShow)
+            }
         }
     }
 
     inner class TvShowViewHolder(private val binding: ItemMovieBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(tvShow: TvShow) {
-            binding.tvTitleFilm.text = tvShow.name
-            binding.tvDescriptionFilm.text = tvShow.overview
-            binding.imgMovie.loadImageUrl(Image.IMAGE_URL + Image.SIZE + tvShow.posterPath)
+        fun bind(tvShow: TvShowEntity) {
+            with(binding) {
+                tvTitleFilm.text = tvShow.name
+                tvDescriptionFilm.text = tvShow.overview
+                imgMovie.loadImageUrl(Image.IMAGE_URL + Image.SIZE + tvShow.posterPath)
+            }
         }
     }
 

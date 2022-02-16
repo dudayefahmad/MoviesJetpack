@@ -10,30 +10,23 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahmaddudayef.moviesmade.R
-import com.ahmaddudayef.moviesmade.data.State
-import com.ahmaddudayef.moviesmade.data.remote.response.movies.Movie
-import com.ahmaddudayef.moviesmade.data.remote.response.tvshow.TvShow
+import com.ahmaddudayef.moviesmade.data.remote.response.Movie
+import com.ahmaddudayef.moviesmade.data.remote.response.TvShow
 import com.ahmaddudayef.moviesmade.databinding.ActivitySearchBinding
-import com.ahmaddudayef.moviesmade.presentation.home.movie.MovieAdapter
-import com.ahmaddudayef.moviesmade.presentation.home.tvshow.TvShowAdapter
 import com.ahmaddudayef.moviesmade.util.gone
 import com.ahmaddudayef.moviesmade.util.showSnackbar
 import com.ahmaddudayef.moviesmade.util.visible
+import com.ahmaddudayef.moviesmade.vo.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
     private val viewModel by viewModel<SearchViewModel>()
-    private val movieAdapter by lazy { MovieAdapter() }
-    private val tvShowAdapter by lazy { TvShowAdapter() }
-    private var listMovie = arrayListOf<Movie>()
-    private var listTvShow = arrayListOf<TvShow>()
-
-
+    private val movieAdapter by lazy { SearchMovieAdapter() }
+    private val tvShowAdapter by lazy { SearchTvShowAdapter() }
     private lateinit var query: String
     val EXTRA_QUERY = "extra_query"
 
@@ -112,38 +105,34 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun startObservingData() {
-        viewModel.searchMovieState.observe(this) {
-            when (it) {
-                is State.Loading -> {
+        viewModel.searchMovieState.observe(this) { movies ->
+            when (movies.status) {
+                Status.LOADING -> {
                     showLoading()
                 }
-
-                is State.Error -> {
+                Status.SUCCESS -> {
                     hideLoading()
-                    showError(it.throwable)
+                    setMovieData(movies.data)
                 }
-
-                is State.Success -> {
+                Status.ERROR -> {
                     hideLoading()
-                    setMovieData(it.data)
+                    showError(movies.message)
                 }
             }
-        }
 
-        viewModel.searchTvShowState.observe(this) {
-            when (it) {
-                is State.Loading -> {
-                    showLoading()
-                }
-
-                is State.Error -> {
-                    hideLoading()
-                    showError(it.throwable)
-                }
-
-                is State.Success -> {
-                    hideLoading()
-                    setTvShowData(it.data)
+            viewModel.searchTvShowState.observe(this) { tvShow ->
+                when (tvShow.status) {
+                    Status.LOADING -> {
+                        showLoading()
+                    }
+                    Status.SUCCESS -> {
+                        hideLoading()
+                        setTvShowData(tvShow.data)
+                    }
+                    Status.ERROR -> {
+                        hideLoading()
+                        showError(movies.message)
+                    }
                 }
             }
         }
@@ -160,13 +149,17 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
-    private fun setTvShowData(data: List<TvShow>) {
-        tvShowAdapter.setListTvShow(data)
+    private fun setTvShowData(data: List<TvShow>?) {
+        if (data != null) {
+            tvShowAdapter.setListTvShow(data)
+        }
     }
 
 
-    private fun setMovieData(data: List<Movie>) {
-        movieAdapter.setListMovie(data)
+    private fun setMovieData(data: List<Movie>?) {
+        if (data != null) {
+            movieAdapter.setListMovie(data)
+        }
     }
 
     private fun searchMovie() {
@@ -179,8 +172,10 @@ class SearchActivity : AppCompatActivity() {
         viewModel.searchTvShow(query)
     }
 
-    private fun showError(throwable: Throwable) {
-        throwable.message?.let { showSnackbar(binding.clRoot, it) }
+    private fun showError(errorMessage: String?) {
+        if (errorMessage != null) {
+            binding.root.showSnackbar(errorMessage)
+        }
     }
 
     private fun hideLoading() {

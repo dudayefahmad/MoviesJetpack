@@ -1,7 +1,6 @@
 package com.ahmaddudayef.moviesmade.di
 
-import com.ahmaddudayef.moviesmade.presentation.detailtvshow.DetailTvShowViewModel
-import com.ahmaddudayef.moviesmade.presentation.detaimovie.DetailMovieViewModel
+import com.ahmaddudayef.moviesmade.presentation.detail.DetailViewModel
 import com.ahmaddudayef.moviesmade.presentation.favorite.moviefavorite.MovieFavoriteViewModel
 import com.ahmaddudayef.moviesmade.presentation.favorite.tvshowfavorite.TvShowFavoriteViewModel
 import com.ahmaddudayef.moviesmade.presentation.home.HomeViewModel
@@ -17,9 +16,8 @@ val viewModelModule = module {
     viewModel { TvShowViewModel(get()) }
     viewModel { MovieFavoriteViewModel(get()) }
     viewModel { TvShowFavoriteViewModel(get()) }
-    viewModel { DetailTvShowViewModel(get()) }
-    viewModel { DetailMovieViewModel(get()) }
-    viewModel { SearchViewModel(get()) }
+    viewModel { DetailViewModel(get(), get()) }
+    viewModel { SearchViewModel(get(), get()) }
     viewModel { SettingViewModel(get()) }
     viewModel { HomeViewModel(get()) }
 }

@@ -1,7 +1,7 @@
 package com.ahmaddudayef.moviesmade.di
 
 import com.ahmaddudayef.moviesmade.BuildConfig
-import com.ahmaddudayef.moviesmade.data.ApiService
+import com.ahmaddudayef.moviesmade.data.remote.api.ApiService
 import com.google.gson.Gson
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

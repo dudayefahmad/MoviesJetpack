@@ -2,7 +2,7 @@ package com.ahmaddudayef.moviesmade.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
-import com.ahmaddudayef.moviesmade.data.local.SettingPreferences
+import com.ahmaddudayef.moviesmade.data.local.datastore.SettingPreferences
 import com.ahmaddudayef.moviesmade.data.source.SettingDataSource
 
 class SettingRepository(private val settingPreferences: SettingPreferences) : SettingDataSource {

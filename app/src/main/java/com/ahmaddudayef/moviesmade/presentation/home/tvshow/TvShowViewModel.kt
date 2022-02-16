@@ -1,28 +1,15 @@
 package com.ahmaddudayef.moviesmade.presentation.home.tvshow
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.ahmaddudayef.moviesmade.data.State
-import com.ahmaddudayef.moviesmade.data.remote.response.tvshow.TvShow
-import com.ahmaddudayef.moviesmade.data.source.TvShowDataSource
-import com.ahmaddudayef.moviesmade.util.EspressoIdlingResource
-import kotlinx.coroutines.launch
+import androidx.paging.PagedList
+import com.ahmaddudayef.moviesmade.data.local.entity.TvShowEntity
+import com.ahmaddudayef.moviesmade.data.repository.TvShowRepository
+import com.ahmaddudayef.moviesmade.vo.Resource
 
-class TvShowViewModel(private val tvShowDataSource: TvShowDataSource) : ViewModel() {
-    val tvShowState = MutableLiveData<State<List<TvShow>>>()
+class TvShowViewModel(private val tvShowRepository: TvShowRepository) : ViewModel() {
 
-    fun getTvShow(language: String) {
-        viewModelScope.launch {
-//            EspressoIdlingResource.increment()
-            tvShowState.postValue(State.Loading())
-            try {
-                val tvShow = tvShowDataSource.getTvShow(language)
-                tvShowState.postValue(State.Success(tvShow))
-//                EspressoIdlingResource.decrement()
-            } catch (e: Exception) {
-                tvShowState.postValue(State.Error(e))
-            }
-        }
+    fun getTvShow(): LiveData<Resource<PagedList<TvShowEntity>>> {
+        return tvShowRepository.getAllTvShow()
     }
 }
