@@ -5,7 +5,8 @@ import androidx.lifecycle.asLiveData
 import com.ahmaddudayef.moviesmade.data.local.datastore.SettingPreferences
 import com.ahmaddudayef.moviesmade.data.source.SettingDataSource
 
-class SettingRepository(private val settingPreferences: SettingPreferences) : SettingDataSource {
+class SettingRepository(private val settingPreferences: SettingPreferences) :
+    SettingDataSource {
 
     override suspend fun getThemeSettings(): LiveData<Boolean> {
         return settingPreferences.getThemeSetting().asLiveData()

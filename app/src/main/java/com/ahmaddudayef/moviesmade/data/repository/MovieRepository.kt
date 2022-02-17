@@ -81,7 +81,7 @@ class MovieRepository(
         return remoteDataSource.searchMovies(query)
     }
 
-    override fun getDetailMovie(id: Int): LiveData<ApiResponse<Movie>> {
+    override fun getDetailMovieByIdFromNetwork(id: Int): LiveData<ApiResponse<Movie>> {
         return remoteDataSource.getDetailMovie(id)
     }
 

@@ -19,6 +19,6 @@ interface TvShowDataSource {
 
     suspend fun searchTvShow(query: String): List<TvShow>
 
-    fun getDetailTvShow(id: Int): LiveData<ApiResponse<TvShow>>
+    fun getDetailTvShowByIdFromNetwork(id: Int): LiveData<ApiResponse<TvShow>>
 
 }

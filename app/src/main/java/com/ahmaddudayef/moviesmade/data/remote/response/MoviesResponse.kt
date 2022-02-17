@@ -14,7 +14,7 @@ data class MoviesResponse(
 data class Movie(
 
     @SerializedName("id")
-    val id: Int?,
+    val id: Int,
 
     @SerializedName("overview")
     val overview: String,

@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmaddudayef.moviesmade.data.remote.response.Movie
 import com.ahmaddudayef.moviesmade.data.remote.response.TvShow
-import com.ahmaddudayef.moviesmade.data.repository.MovieRepository
-import com.ahmaddudayef.moviesmade.data.repository.TvShowRepository
+import com.ahmaddudayef.moviesmade.data.source.MovieDataSource
+import com.ahmaddudayef.moviesmade.data.source.TvShowDataSource
 import com.ahmaddudayef.moviesmade.vo.Resource
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    private val movieRepository: MovieRepository,
-    private val tvShowRepository: TvShowRepository
+    private val movieRepository: MovieDataSource,
+    private val tvShowRepository: TvShowDataSource
 ) : ViewModel() {
 
     private val _searchMovieState = MutableLiveData<Resource<List<Movie>>>()

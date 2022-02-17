@@ -17,7 +17,6 @@ import com.adevinta.android.barista.interaction.BaristaClickInteractions.clickBa
 import com.adevinta.android.barista.interaction.BaristaListInteractions.clickListItem
 import com.adevinta.android.barista.interaction.BaristaListInteractions.scrollListToPosition
 import com.adevinta.android.barista.interaction.BaristaMenuClickInteractions.clickMenu
-import com.adevinta.android.barista.interaction.BaristaSwipeRefreshInteractions.refresh
 import com.ahmaddudayef.moviesmade.R
 import com.ahmaddudayef.moviesmade.util.EspressoIdlingResource
 import com.google.android.material.tabs.TabLayout
@@ -51,8 +50,6 @@ class HomeActivityTest {
         assertDisplayed(R.id.rvMovie)
         scrollListToPosition(R.id.rvMovie, 15)
         scrollListToPosition(R.id.rvMovie, 0)
-        refresh(R.id.srlMovie)
-        assertDisplayed(R.id.rvMovie)
     }
 
     @Test
@@ -75,8 +72,6 @@ class HomeActivityTest {
         onView(withId(R.id.viewPager)).perform(swipeLeft())
         onView(withId(R.id.viewPager)).perform(swipeLeft())
         assertDisplayed(R.id.rvMovie)
-        refresh(R.id.srlRootMovie)
-        assertDisplayed(R.id.rvMovie)
     }
 
     @Test
@@ -86,7 +81,6 @@ class HomeActivityTest {
         assertDisplayed(R.id.rvTvShow)
         scrollListToPosition(R.id.rvTvShow, 19)
         scrollListToPosition(R.id.rvTvShow, 0)
-        refresh()
         assertDisplayed(R.id.rvTvShow)
     }
 
@@ -111,8 +105,6 @@ class HomeActivityTest {
         onView(withId(R.id.viewPager)).perform(swipeLeft())
         onView(withId(R.id.viewPager)).perform(swipeLeft())
         onView(withId(R.id.tabsFavorite)).perform(selectTabAtPosition(1))
-        refresh(R.id.srlRootTvShow)
-        assertDisplayed(R.id.rvTvShowFavorite)
     }
 
     private fun selectTabAtPosition(tabIndex: Int): ViewAction {

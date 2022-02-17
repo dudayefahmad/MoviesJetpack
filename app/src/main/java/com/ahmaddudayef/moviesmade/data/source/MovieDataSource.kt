@@ -19,5 +19,5 @@ interface MovieDataSource {
 
     suspend fun searchMovies(query: String): List<Movie>
 
-    fun getDetailMovie(id: Int): LiveData<ApiResponse<Movie>>
+    fun getDetailMovieByIdFromNetwork(id: Int): LiveData<ApiResponse<Movie>>
 }

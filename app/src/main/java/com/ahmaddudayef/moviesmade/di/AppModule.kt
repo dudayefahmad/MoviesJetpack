@@ -10,11 +10,12 @@ import org.koin.dsl.module
 val appModule = module {
 
     single { GsonBuilder().setLenient().create() }
+    single {
+        Room.databaseBuilder(androidContext(), CatalogDatabase::class.java, "catalog-movies-db")
+            .build()
+    }
     factory { get<CatalogDatabase>().movieDao() }
     factory { get<CatalogDatabase>().tvShowDao() }
-    single {
-        Room.databaseBuilder(androidContext(), CatalogDatabase::class.java, "catalog-db").build()
-    }
     single {
         SettingPreferences(androidContext())
     }

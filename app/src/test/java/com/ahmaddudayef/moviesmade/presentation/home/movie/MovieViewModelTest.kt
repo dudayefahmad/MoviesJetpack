@@ -1,29 +1,26 @@
 package com.ahmaddudayef.moviesmade.presentation.home.movie
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.ahmaddudayef.moviesmade.data.State
-import com.ahmaddudayef.moviesmade.data.remote.response.movies.Movie
-import com.ahmaddudayef.moviesmade.data.source.MovieDataSource
-import com.ahmaddudayef.moviesmade.mock.MockMovieRepository
-import com.ahmaddudayef.moviesmade.util.getTestObserver
-import junit.framework.Assert
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.paging.PagedList
+import com.ahmaddudayef.moviesmade.data.local.entity.MovieEntity
+import com.ahmaddudayef.moviesmade.data.repository.MovieRepository
+import com.ahmaddudayef.moviesmade.vo.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.junit.rules.TestRule
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import org.mockito.BDDMockito
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 
 class MovieViewModelTest : KoinTest {
@@ -33,14 +30,15 @@ class MovieViewModelTest : KoinTest {
     private val viewModel by inject<MovieViewModel>()
 
     @Mock
-    private lateinit var movieRepository: MovieDataSource
+    private lateinit var movieRepository: MovieRepository
 
-    private val mockMovieRepository = MockMovieRepository()
+    @Mock
+    private lateinit var observerMovie: Observer<Resource<PagedList<MovieEntity>>>
+
+    @Mock
+    private lateinit var moviePagedList: PagedList<MovieEntity>
 
     private val testDispatcher = TestCoroutineDispatcher()
-
-    private val language = "id"
-
 
     @Before
     fun setup() {
@@ -65,16 +63,21 @@ class MovieViewModelTest : KoinTest {
     }
 
     @Test
-    fun `getMovies success`() {
+    fun `success getMovies`() {
         testDispatcher.runBlockingTest {
-            val listMovie = mockMovieRepository.getMovies(language)
-            val expected = listOf<State<List<Movie>>>(
-                State.Success(listMovie)
-            )
-            BDDMockito.given(movieRepository.getMovies(language)).willReturn(listMovie)
-            viewModel.getMovies(language)
-            val testObserver = viewModel.movieState.getTestObserver()
-            Assert.assertEquals(testObserver.observedValues, expected)
+            val dummyMovie = Resource.success(moviePagedList)
+            Mockito.`when`(dummyMovie.data?.size).thenReturn(5)
+            val movie = MutableLiveData<Resource<PagedList<MovieEntity>>>()
+            movie.value = dummyMovie
+
+            Mockito.`when`(movieRepository.getAllMovies()).thenReturn(movie)
+            val movieEntity = viewModel.getMovies().value?.data
+            Mockito.verify(movieRepository).getAllMovies()
+            Assert.assertNotNull(movieEntity)
+            Assert.assertEquals(5, movieEntity?.size)
+
+            viewModel.getMovies().observeForever(observerMovie)
+            Mockito.verify(observerMovie).onChanged(dummyMovie)
         }
     }
 }

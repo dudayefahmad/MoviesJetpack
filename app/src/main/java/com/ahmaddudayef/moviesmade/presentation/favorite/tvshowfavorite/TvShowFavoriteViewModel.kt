@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
 import com.ahmaddudayef.moviesmade.data.local.entity.TvShowEntity
-import com.ahmaddudayef.moviesmade.data.repository.TvShowRepository
+import com.ahmaddudayef.moviesmade.data.source.TvShowDataSource
 
 class TvShowFavoriteViewModel(
-    private val tvShowRepository: TvShowRepository
+    private val tvShowRepository: TvShowDataSource
 ) : ViewModel() {
 
     fun getFavoriteTvShow(): LiveData<PagedList<TvShowEntity>> {

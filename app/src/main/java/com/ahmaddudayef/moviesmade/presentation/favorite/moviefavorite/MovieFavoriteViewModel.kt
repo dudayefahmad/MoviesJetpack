@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
 import com.ahmaddudayef.moviesmade.data.local.entity.MovieEntity
-import com.ahmaddudayef.moviesmade.data.repository.MovieRepository
+import com.ahmaddudayef.moviesmade.data.source.MovieDataSource
 
 class MovieFavoriteViewModel(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieDataSource
 ) : ViewModel() {
 
     fun getFavoriteMovie(): LiveData<PagedList<MovieEntity>> {

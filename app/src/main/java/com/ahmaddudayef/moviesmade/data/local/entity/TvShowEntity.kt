@@ -1,6 +1,7 @@
 package com.ahmaddudayef.moviesmade.data.local.entity
 
 import android.os.Parcelable
+import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -11,8 +12,9 @@ import kotlinx.parcelize.Parcelize
 data class TvShowEntity(
 
     @PrimaryKey
+    @NonNull
     @ColumnInfo(name = "id")
-    val id: Int? = null,
+    val id: Int,
 
     @ColumnInfo(name = "first_air_date")
     val firstAirDate: String? = null,

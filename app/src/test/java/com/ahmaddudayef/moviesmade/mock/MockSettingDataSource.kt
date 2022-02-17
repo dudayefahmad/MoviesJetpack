@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ahmaddudayef.moviesmade.data.source.SettingDataSource
 
-class MockSettingRepository : SettingDataSource {
+class MockSettingDataSource : SettingDataSource {
     override suspend fun getThemeSettings(): LiveData<Boolean> {
         return isDarkMode
     }

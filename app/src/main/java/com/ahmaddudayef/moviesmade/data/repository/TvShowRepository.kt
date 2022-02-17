@@ -78,7 +78,7 @@ class TvShowRepository(
         return remoteDataSource.searchTvShows(query)
     }
 
-    override fun getDetailTvShow(id: Int): LiveData<ApiResponse<TvShow>> {
+    override fun getDetailTvShowByIdFromNetwork(id: Int): LiveData<ApiResponse<TvShow>> {
         return remoteDataSource.getDetailTvShow(id)
     }
 

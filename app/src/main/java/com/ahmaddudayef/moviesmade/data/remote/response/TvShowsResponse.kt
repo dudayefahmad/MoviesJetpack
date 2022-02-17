@@ -14,7 +14,7 @@ data class TvShowsResponse(
 data class TvShow(
 
     @SerializedName("id")
-    val id: Int?,
+    val id: Int,
 
     @SerializedName("first_air_date")
     val firstAirDate: String,
