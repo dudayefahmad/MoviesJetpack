@@ -1,22 +1,29 @@
 package com.ahmaddudayef.moviesmade.presentation.home.movie
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ahmaddudayef.moviesmade.data.Image
-import com.ahmaddudayef.moviesmade.data.remote.response.movies.Movie
+import com.ahmaddudayef.moviesmade.data.local.entity.MovieEntity
 import com.ahmaddudayef.moviesmade.databinding.ItemMovieBinding
-import com.ahmaddudayef.moviesmade.presentation.detaimovie.DetailMovieActivity
 import com.ahmaddudayef.moviesmade.util.loadImageUrl
 
-class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+class MovieAdapter(private val callback: MovieCallback) :
+    PagedListAdapter<MovieEntity, MovieAdapter.MovieViewHolder>(DIFF_CALLBACK) {
 
-    var listMovie: List<Movie> = arrayListOf()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MovieEntity>() {
+            override fun areItemsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
+                return oldItem == newItem
+            }
         }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val itemMovieBinding =
@@ -24,27 +31,29 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
         return MovieViewHolder(itemMovieBinding)
     }
 
-    override fun getItemCount(): Int = listMovie.size
-
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.bind(listMovie[position])
+        val movie = getItem(position)
+        if (movie != null) {
+            holder.bind(movie)
+        }
         holder.itemView.setOnClickListener {
-            val data = listMovie[position]
-            val context = it.context
-            val intent = Intent(context, DetailMovieActivity::class.java)
-            intent.putExtra(DetailMovieActivity.DETAIL_FILM, data)
-            context.startActivity(intent)
+            movie?.let { movie ->
+                callback.onItemClicked(movie)
+            }
         }
     }
 
     inner class MovieViewHolder(private val binding: ItemMovieBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(movie: Movie) {
-            binding.tvTitleFilm.text = movie.title
-            binding.tvDescriptionFilm.text = movie.overview
-            binding.imgMovie.loadImageUrl(Image.IMAGE_URL + Image.SIZE + movie.posterPath)
+        fun bind(movie: MovieEntity) {
+            with(binding) {
+                tvTitleFilm.text = movie.title
+                tvDescriptionFilm.text = movie.overview
+                imgMovie.loadImageUrl(Image.IMAGE_URL + Image.SIZE + movie.posterPath)
+            }
         }
     }
+
 
 }

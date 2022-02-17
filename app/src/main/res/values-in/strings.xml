@@ -29,4 +29,10 @@
     <string name="release_reminder">Pengingat rilis</string>
     <string name="change_language">Ubah Bahasa</string>
     <string name="title_activity_settings">Pengaturan</string>
+
+    <!--Empty States-->
+    <string name="empty_state_title_no_conn">Tidak ada koneksi internet</string>
+    <string name="empty_state_title_no_favorite_item">No favorites yet.</string>
+    <string name="empty_state_desc_no_favorite_item_movie">Anda tidak memiliki daftar film favorit</string>
+    <string name="empty_state_desc_no_favorite_item_tvshow">Anda tidak memiliki daftar acara tv favorit</string>
 </resources>
