@@ -1,28 +1,15 @@
 package com.ahmaddudayef.moviesmade.presentation.home.movie
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.ahmaddudayef.moviesmade.data.State
-import com.ahmaddudayef.moviesmade.data.remote.response.movies.Movie
+import androidx.paging.PagedList
+import com.ahmaddudayef.moviesmade.data.local.entity.MovieEntity
 import com.ahmaddudayef.moviesmade.data.source.MovieDataSource
-import com.ahmaddudayef.moviesmade.util.EspressoIdlingResource
-import kotlinx.coroutines.launch
+import com.ahmaddudayef.moviesmade.vo.Resource
 
-class MovieViewModel(private val movieDataSource: MovieDataSource) : ViewModel() {
-    val movieState = MutableLiveData<State<List<Movie>>>()
+class MovieViewModel(private val movieRepository: MovieDataSource) : ViewModel() {
 
-    fun getMovies(language: String) {
-        viewModelScope.launch {
-//            EspressoIdlingResource.increment()
-            movieState.postValue(State.Loading())
-            try {
-                val movies = movieDataSource.getMovies(language)
-                movieState.postValue(State.Success(movies))
-//                EspressoIdlingResource.decrement()
-            } catch (e: Exception) {
-                movieState.postValue(State.Error(e))
-            }
-        }
+    fun getMovies(): LiveData<Resource<PagedList<MovieEntity>>> {
+        return movieRepository.getAllMovies()
     }
 }

@@ -1,11 +1,11 @@
 package com.ahmaddudayef.moviesmade.presentation.favorite.tvshowfavorite
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.ahmaddudayef.moviesmade.data.State
-import com.ahmaddudayef.moviesmade.data.remote.response.tvshow.TvShow
-import com.ahmaddudayef.moviesmade.data.source.TvShowFavoriteDataSource
-import com.ahmaddudayef.moviesmade.mock.MockTvShowFavoriteRepository
-import com.ahmaddudayef.moviesmade.util.getTestObserver
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.paging.PagedList
+import com.ahmaddudayef.moviesmade.data.local.entity.TvShowEntity
+import com.ahmaddudayef.moviesmade.data.source.TvShowDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -13,6 +13,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -22,8 +23,9 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import org.mockito.BDDMockito
 import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
 class TvShowFavoriteViewModelTest : KoinTest {
@@ -33,9 +35,13 @@ class TvShowFavoriteViewModelTest : KoinTest {
     private val viewModel by inject<TvShowFavoriteViewModel>()
 
     @Mock
-    private lateinit var tvShowFavoriteRepository: TvShowFavoriteDataSource
+    private lateinit var tvShowFavoriteRepository: TvShowDataSource
 
-    private val mockTvShowFavoriteRepository = MockTvShowFavoriteRepository()
+    @Mock
+    private lateinit var observerTvShow: Observer<PagedList<TvShowEntity>>
+
+    @Mock
+    private lateinit var tvShowPagedList: PagedList<TvShowEntity>
 
     private val testDispatcher = TestCoroutineDispatcher()
 
@@ -62,14 +68,19 @@ class TvShowFavoriteViewModelTest : KoinTest {
     @Test
     fun `getFavoriteTvShow success`() {
         testDispatcher.runBlockingTest {
-            val listTvShow = mockTvShowFavoriteRepository.getTvShow()
-            val expected = listOf<State<List<TvShow>>>(
-                State.Success(listTvShow)
-            )
-            BDDMockito.given(tvShowFavoriteRepository.getTvShow()).willReturn(listTvShow)
-            viewModel.getFavoriteTvShow()
-            val testObserver = viewModel.tvShowFavoriteState.getTestObserver()
-            assertEquals(testObserver.observedValues, expected)
+            val dummyTvShow = tvShowPagedList
+            `when`(dummyTvShow.size).thenReturn(5)
+            val tvShow = MutableLiveData<PagedList<TvShowEntity>>()
+            tvShow.value = dummyTvShow
+
+            `when`(tvShowFavoriteRepository.getAllFavoriteTvShow()).thenReturn(tvShow)
+            val tvShowEntity = viewModel.getFavoriteTvShow().value
+            Mockito.verify(tvShowFavoriteRepository).getAllFavoriteTvShow()
+            assertNotNull(tvShowEntity)
+            assertEquals(5, tvShowEntity?.size)
+
+            viewModel.getFavoriteTvShow().observeForever(observerTvShow)
+            Mockito.verify(observerTvShow).onChanged(dummyTvShow)
         }
     }
 }

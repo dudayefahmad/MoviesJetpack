@@ -1,18 +1,23 @@
 package com.ahmaddudayef.moviesmade.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.ahmaddudayef.moviesmade.BuildConfig
-import com.ahmaddudayef.moviesmade.data.ApiService
-import com.ahmaddudayef.moviesmade.data.remote.response.tvshow.TvShows
-import com.ahmaddudayef.moviesmade.data.source.TvShowDataSource
-import com.ahmaddudayef.moviesmade.mock.MockTvShowRepository
+import androidx.lifecycle.MutableLiveData
+import androidx.paging.DataSource
+import com.ahmaddudayef.moviesmade.data.local.LocalDataSource
+import com.ahmaddudayef.moviesmade.data.local.entity.TvShowEntity
+import com.ahmaddudayef.moviesmade.data.remote.RemoteDataSource
+import com.ahmaddudayef.moviesmade.util.AppExecutors
+import com.ahmaddudayef.moviesmade.util.DataDummy
+import com.ahmaddudayef.moviesmade.util.LiveDataTestUtil
+import com.ahmaddudayef.moviesmade.util.PagedListUtil
+import com.ahmaddudayef.moviesmade.vo.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -22,28 +27,46 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import org.mockito.BDDMockito
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 
 class TvShowRepositoryTest : KoinTest {
+
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
     private val testDispatcher = TestCoroutineDispatcher()
 
-    private val repository by inject<TvShowDataSource>()
+    private val tvShowRepository by inject<TvShowRepository>()
 
     @Mock
-    private lateinit var apiService: ApiService
+    private lateinit var localDataSource: LocalDataSource
+
+    @Mock
+    private lateinit var remoteDataSource: RemoteDataSource
+
+    @Mock
+    private lateinit var appExecutors: AppExecutors
+
+    private val tvShowResponse = DataDummy.generateDataTvShowDummy()
+    private val tvShow = tvShowResponse[0]
+    private val tvShowId = tvShowResponse[0].id
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(testDispatcher)
         startKoin {
-            modules(module { single { TvShowRepository(apiService) as TvShowDataSource } })
+            modules(module {
+                single {
+                    TvShowRepository(
+                        localDataSource,
+                        remoteDataSource,
+                        appExecutors
+                    )
+                }
+            })
         }
     }
 
@@ -54,26 +77,43 @@ class TvShowRepositoryTest : KoinTest {
     }
 
     @Test
-    fun `success get tvShow list`() {
-        testDispatcher.runBlockingTest {
-            val language = "en"
-            val tvShow = TVSHOW
-            val expected = TVSHOW.results
+    fun `success get all tv show`() {
+        val dataSourceFactory =
+            Mockito.mock(DataSource.Factory::class.java) as DataSource.Factory<Int, TvShowEntity>
+        Mockito.`when`(localDataSource.getAllTvShows()).thenReturn(dataSourceFactory)
+        tvShowRepository.getAllTvShow()
 
-            BDDMockito.given(apiService.getTvShow(BuildConfig.API_KEY, language)).willReturn(tvShow)
-            val actual = repository.getTvShow(language)
-
-            Mockito.verify(apiService).getTvShow(BuildConfig.API_KEY, language)
-            assertEquals(expected, actual)
-        }
+        val tvShowEntity =
+            Resource.success(PagedListUtil.mockPagedList(DataDummy.generateDataTvShowDummy()))
+        Mockito.verify(localDataSource).getAllTvShows()
+        assertNotNull(tvShowEntity.data)
+        assertEquals(tvShowResponse.size.toLong(), tvShowEntity.data?.size?.toLong())
     }
 
-    companion object {
-        val TVSHOW = TvShows(
-            1,
-            10,
-            MockTvShowRepository.LIST_TVSHOW,
-            10
-        )
+    @Test
+    fun `success get all favorite tv show`() {
+        val dataSourceFactory =
+            Mockito.mock(DataSource.Factory::class.java) as DataSource.Factory<Int, TvShowEntity>
+        Mockito.`when`(localDataSource.getAllFavoriteTvShows()).thenReturn(dataSourceFactory)
+        tvShowRepository.getAllFavoriteTvShow()
+
+        val tvShowEntity =
+            Resource.success(PagedListUtil.mockPagedList(DataDummy.generateDataMoviesDummy()))
+        Mockito.verify(localDataSource).getAllFavoriteTvShows()
+        assertNotNull(tvShowEntity.data)
+        assertEquals(tvShowResponse.size.toLong(), tvShowEntity.data?.size?.toLong())
+    }
+
+    @Test
+    fun `success get detail tv show by id`() {
+        val dummyTvShow = MutableLiveData<TvShowEntity>()
+        dummyTvShow.value = tvShow
+        val tvShowId = tvShowId
+        Mockito.`when`(localDataSource.getDetailTvShowById(tvShowId)).thenReturn(dummyTvShow)
+
+        val data = LiveDataTestUtil.getValue(tvShowRepository.getDetailTvShowById(tvShow.id))
+        Mockito.verify(localDataSource).getDetailTvShowById(tvShow.id)
+        assertNotNull(data)
+        assertEquals(tvShow.id, data.id)
     }
 }

@@ -2,7 +2,7 @@ package com.ahmaddudayef.moviesmade.presentation.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.ahmaddudayef.moviesmade.data.source.SettingDataSource
-import com.ahmaddudayef.moviesmade.mock.MockSettingRepository
+import com.ahmaddudayef.moviesmade.mock.MockSettingDataSource
 import com.ahmaddudayef.moviesmade.util.getTestObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -31,9 +31,9 @@ class HomeViewModelTest : KoinTest {
     private val viewModel by inject<HomeViewModel>()
 
     @Mock
-    private lateinit var settingRepository: SettingDataSource
+    private lateinit var settingDataSource: SettingDataSource
 
-    private val mockSettingRepository = MockSettingRepository()
+    private val mockSettingRepository = MockSettingDataSource()
 
     private val testDispatcher = TestCoroutineDispatcher()
 
@@ -46,7 +46,7 @@ class HomeViewModelTest : KoinTest {
             modules(module {
                 single {
                     HomeViewModel(
-                        settingRepository
+                        settingDataSource
                     )
                 }
             })
@@ -64,7 +64,7 @@ class HomeViewModelTest : KoinTest {
         testDispatcher.runBlockingTest {
             val theme = mockSettingRepository.getThemeSettings()
             val expected = listOf(true)
-            BDDMockito.given(settingRepository.getThemeSettings()).willReturn(theme)
+            BDDMockito.given(settingDataSource.getThemeSettings()).willReturn(theme)
             val actual = viewModel.getThemeSettings().getTestObserver().observedValues
             assertEquals(expected, actual)
         }
