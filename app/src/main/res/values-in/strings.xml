@@ -19,7 +19,6 @@
     </string-array>
 
     <string name="new_release_notification">%1s sudah rilis. Tekan untuk baca selengkapnya!</string>
-    <string name="notification_content">Hi selamat datang kembali :), kami merindukan anda</string>
 
     <string name="language">Bahasa</string>
     <string name="theme">Tema</string>
