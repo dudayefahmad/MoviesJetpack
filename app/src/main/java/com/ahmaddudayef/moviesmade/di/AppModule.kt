@@ -1,22 +1,28 @@
 package com.ahmaddudayef.moviesmade.di
 
-import androidx.room.Room
-import com.ahmaddudayef.moviesmade.data.local.datastore.SettingPreferences
-import com.ahmaddudayef.moviesmade.data.local.room.CatalogDatabase
-import com.google.gson.GsonBuilder
-import org.koin.android.ext.koin.androidContext
+import com.ahmaddudayef.moviesmade.core.domain.usecase.MovieInteractor
+import com.ahmaddudayef.moviesmade.core.domain.usecase.MovieUseCase
+import com.ahmaddudayef.moviesmade.core.domain.usecase.TvShowInteractor
+import com.ahmaddudayef.moviesmade.core.domain.usecase.TvShowUseCase
+import com.ahmaddudayef.moviesmade.detail.DetailViewModel
+import com.ahmaddudayef.moviesmade.home.HomeViewModel
+import com.ahmaddudayef.moviesmade.home.movie.MovieViewModel
+import com.ahmaddudayef.moviesmade.home.tvshow.TvShowViewModel
+import com.ahmaddudayef.moviesmade.search.SearchViewModel
+import com.ahmaddudayef.moviesmade.setting.SettingViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val appModule = module {
+val useCaseModule = module {
+    factory<MovieUseCase> { MovieInteractor(get()) }
+    factory<TvShowUseCase> { TvShowInteractor(get()) }
+}
 
-    single { GsonBuilder().setLenient().create() }
-    single {
-        Room.databaseBuilder(androidContext(), CatalogDatabase::class.java, "catalog-movies-db")
-            .build()
-    }
-    factory { get<CatalogDatabase>().movieDao() }
-    factory { get<CatalogDatabase>().tvShowDao() }
-    single {
-        SettingPreferences(androidContext())
-    }
+val viewModelModule = module {
+    viewModel { MovieViewModel(get()) }
+    viewModel { TvShowViewModel(get()) }
+    viewModel { DetailViewModel(get(), get()) }
+    viewModel { SearchViewModel(get(), get()) }
+    viewModel { SettingViewModel(get()) }
+    viewModel { HomeViewModel(get()) }
 }
