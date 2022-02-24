@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".presentation.home.HomeActivity">
+    tools:context=".home.HomeActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"

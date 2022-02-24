@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_movies">Movies</string>
+    <string name="tab_tv_show">Tv Show</string>
+    <string name="title_favorite">Favorite</string>
+
+    <!--Empty States-->
+    <string name="empty_state_title_no_conn">No internet connection</string>
+    <string name="empty_state_title_no_favorite_item">No favorites yet.</string>
+    <string name="empty_state_desc_no_favorite_item_movie">You don\'t have a list of favorite movies</string>
+    <string name="empty_state_desc_no_favorite_item_tvshow">You don\'t have a list of favorite tv show</string>
+</resources>
