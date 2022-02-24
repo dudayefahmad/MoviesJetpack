@@ -3,6 +3,7 @@
     <string name="tab_movies">Movies</string>
     <string name="tab_tv_show">Tv Show</string>
     <string name="title_favorite">Favorite</string>
+    <string name="favorite">Favorite</string>
 
     <!--Empty States-->
     <string name="empty_state_title_no_conn">No internet connection</string>
