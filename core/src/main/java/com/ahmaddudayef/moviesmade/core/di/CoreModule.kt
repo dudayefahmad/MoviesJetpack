@@ -16,6 +16,9 @@ import com.ahmaddudayef.moviesmade.core.domain.repository.ITvShowRepository
 import com.ahmaddudayef.moviesmade.core.util.AppExecutors
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import net.sqlcipher.database.SQLiteDatabase
+import net.sqlcipher.database.SupportFactory
+import okhttp3.CertificatePinner
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -29,7 +32,14 @@ import java.util.concurrent.TimeUnit
 val appModule = module {
     single { GsonBuilder().setLenient().create() }
     single {
-        Room.databaseBuilder(androidContext(), CatalogDatabase::class.java, "catalog-movies-db")
+        val passphrase: ByteArray = SQLiteDatabase.getBytes("catalog".toCharArray())
+        val factory = SupportFactory(passphrase)
+        Room.databaseBuilder(
+            androidContext(),
+            CatalogDatabase::class.java,
+            "catalog-movies-db"
+        ).fallbackToDestructiveMigration()
+            .openHelperFactory(factory)
             .build()
     }
     factory { get<CatalogDatabase>().movieDao() }
@@ -48,10 +58,15 @@ val networkModule = module {
     }
 
     single {
+        val hostname = "api.themoviedb.org"
+        val certificatePinner = CertificatePinner.Builder()
+            .add(hostname, "sha256/oD/WAoRPvbez1Y2dfYfuo4yujAcYHXdv1Ivb2v2MOKk=")
+            .build()
         OkHttpClient.Builder()
             .addInterceptor(get<Interceptor>(named("logging")))
-            .readTimeout(30, TimeUnit.SECONDS)
-            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .connectTimeout(120, TimeUnit.SECONDS)
+            .certificatePinner(certificatePinner)
             .build()
     }
 

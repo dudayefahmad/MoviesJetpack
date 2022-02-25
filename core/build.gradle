@@ -28,7 +28,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -87,6 +87,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
+    // sqlchiper
+    implementation "net.zetetic:android-database-sqlcipher:$sqlCipherVersion"
+    implementation "androidx.sqlite:sqlite-ktx:$sqlLiteVersion"
+
     // test related dependencies need to be defined here
     testImplementation "io.insert-koin:koin-test:$koinVersion"
     testImplementation "io.insert-koin:koin-test-junit4:$koinVersion"
@@ -114,4 +118,6 @@ dependencies {
     androidTestImplementation('com.adevinta.android:barista:4.2.0') {
         exclude group: 'org.jetbrains.kotlin'
     }
+
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion"
 }

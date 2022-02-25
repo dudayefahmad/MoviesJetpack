@@ -2,7 +2,7 @@
 
 buildscript {
     ext.kotlin_version = '1.6.10'
-    ext.archLifecycleVersion = '2.4.0'
+    ext.archLifecycleVersion = '2.4.1'
     ext.lifeCycleExtensionVersion = '2.2.0'
     ext.activityKtxVersion = "1.4.0"
     ext.swipeRefreshVersion = "1.1.0"
@@ -26,6 +26,9 @@ buildscript {
     ext.jUnitTestingVersion = '4.13.2'
     ext.espressoTestingVersion = '3.4.0'
     ext.androidxTestVersion = "1.4.0"
+    ext.leakcanaryVersion = "2.6"
+    ext.sqlCipherVersion = "4.4.0"
+    ext.sqlLiteVersion = "2.2.0"
 
     repositories {
         google()

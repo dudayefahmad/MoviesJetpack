@@ -2,7 +2,6 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="margin8dp">8dp</dimen>
-    <dimen name="margin4dp">4dp</dimen>
 
     <!--
 Refer to App Widget Documentation for margin information
