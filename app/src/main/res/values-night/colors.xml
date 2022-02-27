@@ -51,8 +51,5 @@
     <color name="md_theme_dark_inverseOnSurface">#1C1B1F</color>
     <color name="md_theme_dark_inverseSurface">#E6E1E5</color>
     <color name="md_theme_dark_primaryInverse">#6750A4</color>
-    <color name="seed">#6750A4</color>
-    <color name="error">#B3261E</color>
-    <color name="bulbColor">@android:color/black</color>
 </resources>
 

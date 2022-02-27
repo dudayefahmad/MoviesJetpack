@@ -68,7 +68,6 @@ class TvShowFavoriteFragment : Fragment() {
                 binding?.rvTvShowFavorite?.visible()
                 binding?.favoriteTvShowEmptyState?.root?.gone()
                 adapter.setListTvShow(tvShow)
-                adapter.notifyDataSetChanged()
             }
         }
     }
